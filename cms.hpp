@@ -14,6 +14,7 @@ class File {
     std::string getCreatedDate();
     void setName(std::string);
     File(std::string filename, std::string author);
+    friend class SecretaryInterface;
 };
 
 class Illustration : public File {
@@ -32,6 +33,7 @@ class Document : public File {
     void addAttachment(std::shared_ptr<Illustration>);
     void removeAttachment(std::shared_ptr<Illustration>);
     Document(std::string filename, std::string author, std::string text, std::string name);
+    friend class WriterInterface;
 };
 
 
@@ -50,6 +52,8 @@ class Catalogue {
     Catalogue(std::string name);
     friend class AdminInterface;
     friend class IllustratorInterface;
+    friend class WriterInterface;
+    friend class SecretaryInterface;
     friend class Storage;
 };
 
@@ -78,10 +82,13 @@ class CMSInterface {
 //Source 1: https://stackoverflow.com/questions/3441853/single-responsibility-in-c-should-i-implement-it-using-friend-classes-or-mor
 //Source 2: https://hackernoon.com/single-responsibility-principle-in-c-solid-as-a-rock-4d323ygo
 class SecretaryInterface: public CMSInterface {
+    protected:
+    void NameSearchTraversal(std::shared_ptr<std::set<std::shared_ptr<Document>>> results, std::string term, std::shared_ptr<Catalogue> catalogue);
+    void AuthorSearchTraversal(std::shared_ptr<std::set<std::shared_ptr<Document>>>, std::string term, std::shared_ptr<Catalogue> catalogue);
     public:
-    void insertFile();
-    void searchDocumentByAuthor(std::string author);
-    void searchDocumentByName(std::string name);
+    void insertFile(std::shared_ptr<File> file, std::shared_ptr<Catalogue> catalogue);
+    std::shared_ptr<std::set<std::shared_ptr<Document>>> searchDocumentByAuthor(std::string author);
+    std::shared_ptr<std::set<std::shared_ptr<Document>>> searchDocumentByName(std::string name);
     SecretaryInterface(std::string name, std::shared_ptr<Storage> storage) : CMSInterface(name, storage) {};
 
 };
@@ -89,15 +96,18 @@ class SecretaryInterface: public CMSInterface {
 class WriterInterface: public CMSInterface {
     public:
     void createDocument(std::string name, std::string text);
-    void updateDocumentName(Document doc, std::string new_name);
-    void updateDocumentText(Document doc, std::string text);
-    void linkIllustration(Document doc, Illustration illustration);
+    void updateDocumentName(std::shared_ptr<Document> doc, std::string new_name);
+    void updateDocumentText(std::shared_ptr<Document> doc, std::string text);
+    void linkIllustration(std::shared_ptr<Document> doc, std::shared_ptr<Illustration> illustration);
     //may "fail" (no changes made) silently if the Illustration is not linked to the document already.
-    void unlinkIllustration(Document doc, std::shared_ptr<Illustration>);
+    void unlinkIllustration(std::shared_ptr<Document> doc, std::shared_ptr<Illustration>);
     WriterInterface(std::string name, std::shared_ptr<Storage> storage) : CMSInterface(name, storage) {};
 };
 
 class IllustratorInterface: public CMSInterface {
+    protected:
+    //helper function, needed for recursion
+    void deleteIllustration(std::shared_ptr<Illustration>, std::shared_ptr<Catalogue>);
     public:
     void createIllustration(std::string name);
     //Functions that don't impact object's lifetime should take a plain reference

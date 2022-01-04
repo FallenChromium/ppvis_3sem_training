@@ -3,8 +3,10 @@
 using namespace cms;
 
 
-void AdminInterface::createCatalogue(std::string name, std::shared_ptr<Catalogue> parent_catalogue) {
-    parent_catalogue->insertCatalogue(std::make_unique<Catalogue>(Catalogue(name)));
+std::shared_ptr<Catalogue> AdminInterface::createCatalogue(std::string name, std::shared_ptr<Catalogue> parent_catalogue) {
+    std::shared_ptr<Catalogue> catalogue(new Catalogue(name));
+    parent_catalogue->insertCatalogue(catalogue);
+    return catalogue;
 }
 
 void AdminInterface::moveFile(std::shared_ptr<Catalogue> old_catalogue, std::shared_ptr<Catalogue> new_catalogue, std::shared_ptr<File> file) {

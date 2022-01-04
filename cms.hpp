@@ -135,7 +135,7 @@ class AdminInterface: public CMSInterface {
     void deleteFile(std::shared_ptr<File>,std::shared_ptr<Catalogue>);
     public:
     void deleteFile(std::shared_ptr<File>);
-    void createCatalogue(std::string name, std::shared_ptr<Catalogue> parent_catalogue);
+    std::shared_ptr<Catalogue> createCatalogue(std::string name, std::shared_ptr<Catalogue> parent_catalogue);
     //will throw exception if there is no such file in the old_catalogue
     void moveFile(std::shared_ptr<Catalogue> old_catalogue, std::shared_ptr<Catalogue> new_catalogue, std::shared_ptr<File> file);
     AdminInterface(std::string name, std::shared_ptr<Storage> storage) : CMSInterface(name, storage) {};

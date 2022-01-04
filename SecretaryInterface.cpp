@@ -17,9 +17,10 @@ void SecretaryInterface::NameSearchTraversal(std::shared_ptr<std::set<std::share
     for (auto file : catalogue->getFiles()) {
         //if file is of a type Document and name == term
         //this should also ensure the type cast will be successful
-        if (typeid(file).hash_code() == typeid(std::shared_ptr<Document>).hash_code() && file->getName() == term) {
+        std::shared_ptr<Document> document = std::dynamic_pointer_cast<Document>(file);
+        if (document != nullptr && document->getName() == term) {
             //cast ptr<File> to ptr<Document>, because we're sure it's possible
-            results->insert(std::dynamic_pointer_cast<Document>(file));
+            results->insert(document);
         }
     }
     for (auto subcatalogue : catalogue->getCatalogues()) {
@@ -32,12 +33,14 @@ void SecretaryInterface::AuthorSearchTraversal(std::shared_ptr<std::set<std::sha
                                                std::shared_ptr<Catalogue> catalogue) 
 {
     for (auto file : catalogue->getFiles()) {
-        if (typeid(file).hash_code() == typeid(std::shared_ptr<Document>).hash_code() && file->getAuthor() == term) {
-            results->insert(std::dynamic_pointer_cast<Document>(file));
+        std::shared_ptr<Document> document = std::dynamic_pointer_cast<Document>(file);
+        if (document != nullptr && document->getAuthor() == term) {
+            //cast ptr<File> to ptr<Document>, because we're sure it's possible
+            results->insert(document);
         }
     }
     for (auto subcatalogue : catalogue->getCatalogues()) {
-        NameSearchTraversal(results, term, subcatalogue);
+        AuthorSearchTraversal(results, term, subcatalogue);
     }
 };
 
@@ -49,6 +52,6 @@ std::shared_ptr<std::set<std::shared_ptr<Document>>> SecretaryInterface::searchD
 
 std::shared_ptr<std::set<std::shared_ptr<Document>>> SecretaryInterface::searchDocumentByName(std::string name) {
     std::shared_ptr<std::set<std::shared_ptr<Document>>> results(new std::set<std::shared_ptr<Document>>);
-    AuthorSearchTraversal(results, name, _storage->getRoot());
+    NameSearchTraversal(results, name, _storage->getRoot());
     return results;
 }

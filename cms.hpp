@@ -91,12 +91,12 @@ class AdminInterface {
 };
 
 class Storage {
-    protected:
+    private:
     std::unique_ptr<Catalogue> _rootCatalogue;
     std::unique_ptr<Catalogue> _draftsCatalogue;
     public:
-    std::unique_ptr<Catalogue> getRoot();
-    std::unique_ptr<Catalogue> getDrafts();
+    Catalogue* getRoot();
+    Catalogue* getDrafts();
     Storage();
     Storage(std::string root_name, std::string drafts_name);
 };

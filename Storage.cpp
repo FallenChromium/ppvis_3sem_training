@@ -4,12 +4,14 @@ using namespace cms;
 
 Storage::Storage() {
     _rootCatalogue = std::make_unique<Catalogue>(Catalogue("/"));
-    _draftsCatalogue = std::make_unique<Catalogue>(Catalogue("Drafts"));
+    _draftsCatalogue = std::make_shared<Catalogue>(Catalogue("Drafts"));
+    _rootCatalogue->insertCatalogue(_draftsCatalogue);
 }
 
 Storage::Storage(std::string rootName, std::string draftsName) {
     _rootCatalogue = std::make_unique<Catalogue>(Catalogue(rootName));
-    _draftsCatalogue = std::make_unique<Catalogue>(Catalogue(draftsName));
+    _draftsCatalogue = std::make_shared<Catalogue>(Catalogue(draftsName));
+    _rootCatalogue->insertCatalogue(_draftsCatalogue);
 }
 
 std::shared_ptr<Catalogue> Storage::getRoot() {

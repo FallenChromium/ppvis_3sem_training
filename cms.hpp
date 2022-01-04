@@ -44,10 +44,11 @@ class Catalogue {
     void insertCatalogue(std::shared_ptr<Catalogue>);
     void removeFile(std::shared_ptr<File>);
     void removeCatalogue(std::shared_ptr<Catalogue>);
-    std::set<std::shared_ptr<File>> const getFiles();
-    std::set<std::shared_ptr<Catalogue>> const getCatalogues();
+    std::set<std::shared_ptr<File>> getFiles() const;
+    std::set<std::shared_ptr<Catalogue>> getCatalogues() const;
     Catalogue(std::string name);
     friend class AdminInterface;
+    friend class Storage;
 };
 
 
@@ -82,10 +83,22 @@ class IllustratorInterface {
 
 class AdminInterface {
     public:
-    void deleteFile(std::shared_ptr<File>);
+    //delete file from ALL catalogues. Second argument is needed for the recursion.
+    void deleteFile(std::shared_ptr<File>,std::shared_ptr<Catalogue>);
     void createCatalogue(std::string name, std::shared_ptr<Catalogue> parent_catalogue);
     //will throw exception if there is no such file in the old_catalogue
     void moveFile(std::shared_ptr<Catalogue> old_catalogue, std::shared_ptr<Catalogue> new_catalogue, std::shared_ptr<File> file);
+};
+
+class Storage {
+    protected:
+    std::unique_ptr<Catalogue> _rootCatalogue;
+    std::unique_ptr<Catalogue> _draftsCatalogue;
+    public:
+    std::unique_ptr<Catalogue> getRoot();
+    std::unique_ptr<Catalogue> getDrafts();
+    Storage();
+    Storage(std::string root_name, std::string drafts_name);
 };
 
 }

@@ -7,4 +7,4 @@
 
 using namespace cms;
 
-
+Storage storage = Storage();

@@ -22,8 +22,8 @@ void SecretaryInterface::NameSearchTraversal(std::shared_ptr<std::set<std::share
             results->insert(std::dynamic_pointer_cast<Document>(file));
         }
     }
-    for (auto catalogue : catalogue->getCatalogues()) {
-        NameSearchTraversal(results, term, catalogue);
+    for (auto subcatalogue : catalogue->getCatalogues()) {
+        NameSearchTraversal(results, term, subcatalogue);
     }
 };
 
@@ -36,8 +36,8 @@ void SecretaryInterface::AuthorSearchTraversal(std::shared_ptr<std::set<std::sha
             results->insert(std::dynamic_pointer_cast<Document>(file));
         }
     }
-    for (auto catalogue : catalogue->getCatalogues()) {
-        NameSearchTraversal(results, term, catalogue);
+    for (auto subcatalogue : catalogue->getCatalogues()) {
+        NameSearchTraversal(results, term, subcatalogue);
     }
 };
 

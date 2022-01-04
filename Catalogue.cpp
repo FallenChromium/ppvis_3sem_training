@@ -6,8 +6,14 @@ Catalogue::Catalogue(std::string name) {
     _name = name;
 }
 
+std::string Catalogue::getName() {
+    return _name;
+}
+
 void Catalogue::insertFile(std::shared_ptr<File> file) {
-    //TODO: add name checking
+    for (auto i: _files) {
+        if (i->getName() == file->getName()) throw NameAlreadyTakenException();
+    }
     _files.insert(file);
 }
 
@@ -16,7 +22,9 @@ void Catalogue::removeFile(std::shared_ptr<File> file) {
 }
 
 void Catalogue::insertCatalogue(std::shared_ptr<Catalogue> catalogue) {
-    //TODO: add name checking
+    for (auto i: _catalogues) {
+        if (i->getName() == catalogue->getName()) throw NameAlreadyTakenException();
+    }
     _catalogues.insert(catalogue);
 }
 

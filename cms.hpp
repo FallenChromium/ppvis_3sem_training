@@ -16,6 +16,8 @@ class File {
     File(std::string filename, std::string author);
     virtual ~File() {};
     friend class SecretaryInterface;
+    friend class WriterInterface;
+    friend class Catalogue;
 };
 
 class Illustration : public File {
@@ -50,6 +52,7 @@ class Catalogue {
     void removeCatalogue(std::shared_ptr<Catalogue>);
     std::set<std::shared_ptr<File>> getFiles() const;
     std::set<std::shared_ptr<Catalogue>> getCatalogues() const;
+    std::string getName();
     Catalogue(std::string name);
     friend class AdminInterface;
     friend class IllustratorInterface;
@@ -86,6 +89,7 @@ class CMSInterface {
 //Source 2: https://hackernoon.com/single-responsibility-principle-in-c-solid-as-a-rock-4d323ygo
 class SecretaryInterface: public CMSInterface {
     protected:
+    //helper functions, recursive
     void NameSearchTraversal(std::shared_ptr<std::set<std::shared_ptr<Document>>> results, std::string term, std::shared_ptr<Catalogue> catalogue);
     void AuthorSearchTraversal(std::shared_ptr<std::set<std::shared_ptr<Document>>>, std::string term, std::shared_ptr<Catalogue> catalogue);
     public:
@@ -97,6 +101,9 @@ class SecretaryInterface: public CMSInterface {
 };
 
 class WriterInterface: public CMSInterface {
+    protected:
+    //helper functions, recursive
+    void updateNameChecker(std::string new_name, std::shared_ptr<Catalogue> catalogue);
     public:
     void createDocument(std::string name, std::string text);
     void updateDocumentName(std::shared_ptr<Document> doc, std::string new_name);
@@ -124,6 +131,7 @@ class IllustratorInterface: public CMSInterface {
 
 class AdminInterface: public CMSInterface {
     protected:
+    //helper function, recursive
     void deleteFile(std::shared_ptr<File>,std::shared_ptr<Catalogue>);
     public:
     void deleteFile(std::shared_ptr<File>);
@@ -132,6 +140,15 @@ class AdminInterface: public CMSInterface {
     void moveFile(std::shared_ptr<Catalogue> old_catalogue, std::shared_ptr<Catalogue> new_catalogue, std::shared_ptr<File> file);
     AdminInterface(std::string name, std::shared_ptr<Storage> storage) : CMSInterface(name, storage) {};
 
+};
+
+
+struct NameAlreadyTakenException : public std::exception
+{
+	const char * what () const throw ()
+    {
+    	return "Name is already taken. Please, name your file differently.";
+    }
 };
 
 }

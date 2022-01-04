@@ -12,7 +12,22 @@ void IllustratorInterface::insertIllustration(Catalogue* folder, std::shared_ptr
     folder->insertFile(file);
 }
 
+void IllustratorInterface::IllustrationDependencyCheck(std::shared_ptr<Illustration> illustration, std::shared_ptr<Catalogue> catalogue) {
+        //check if the illustration is linked to any document
+    for(auto file: catalogue->getFiles()) {
+        std::shared_ptr<Document> doc = std::dynamic_pointer_cast<Document>(file);
+        if (doc != nullptr) {
+            std::set<std::shared_ptr<Illustration>> attachments = doc->getAttachments();
+            if (attachments.find(illustration) != attachments.end()) throw IllustrationisDependedUpon();
+        }
+    }
+    for (auto subcatalogue : catalogue->getCatalogues()) {
+       IllustrationDependencyCheck(illustration, subcatalogue); 
+    }
+}
+
 void IllustratorInterface::deleteIllustration(std::shared_ptr<Illustration> illustration, std::shared_ptr<Catalogue> catalogue) {
+
         //delete file in current directory
     catalogue->removeFile(illustration);
     //traverse catalogue system with dfs
@@ -22,6 +37,6 @@ void IllustratorInterface::deleteIllustration(std::shared_ptr<Illustration> illu
 }
 
 void IllustratorInterface::deleteIllustration(std::shared_ptr<Illustration> illustration) {
-    //TODO: check if it's linked to any document, throw if it is
+    IllustrationDependencyCheck(illustration, _storage->getRoot());
     deleteIllustration(illustration, _storage->getRoot());
 }

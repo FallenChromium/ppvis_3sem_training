@@ -37,6 +37,7 @@ class Document : public File {
     void removeAttachment(std::shared_ptr<Illustration>);
     Document(std::string filename, std::string author, std::string text);
     friend class WriterInterface;
+    friend class IllustratorInterface;
 };
 
 
@@ -118,9 +119,11 @@ class IllustratorInterface: public CMSInterface {
     protected:
     //helper function, needed for recursion
     void deleteIllustration(std::shared_ptr<Illustration>, std::shared_ptr<Catalogue>);
+    void IllustrationDependencyCheck(std::shared_ptr<Illustration> illustration, std::shared_ptr<Catalogue> catalogue);
+
     public:
     std::shared_ptr<Illustration> createIllustration(std::string name);
-    //Functions that don't impact object's lifetime should take a plain reference
+    //Functions that don't impact object's lifetime should take a plain reference. AFAIK it is not necessary, but I decided to implement it somewhere for a showcase
     //Source: https://www.youtube.com/watch?v=xnqTKD8uD64
     void insertIllustration(Catalogue *folder, std::shared_ptr<Illustration>);
     //will throw exception if the illustration is linked to any document
@@ -148,6 +151,14 @@ struct NameAlreadyTakenException : public std::exception
 	const char * what () const throw ()
     {
     	return "Name is already taken. Please, name your file differently.";
+    }
+};
+
+struct IllustrationisDependedUpon : public std::exception
+{
+	const char * what () const throw ()
+    {
+    	return "One or more documents use this illustration. You can't delete it.";
     }
 };
 

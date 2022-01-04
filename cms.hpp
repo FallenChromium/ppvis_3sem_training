@@ -84,7 +84,6 @@ class AdminInterface {
     public:
     void deleteFile(std::shared_ptr<File>);
     void createCatalogue(std::string name, std::shared_ptr<Catalogue> parent_catalogue);
-    void createRootCatalogue();
     //will throw exception if there is no such file in the old_catalogue
     void moveFile(std::shared_ptr<Catalogue> old_catalogue, std::shared_ptr<Catalogue> new_catalogue, std::shared_ptr<File> file);
 };

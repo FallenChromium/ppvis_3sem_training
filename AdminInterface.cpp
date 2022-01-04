@@ -3,14 +3,11 @@
 using namespace cms;
 
 const Catalogue *rootCatalogue;
+std::unique_ptr<Catalogue> draftsCatalogue;
 
 
 void AdminInterface::createCatalogue(std::string name, std::shared_ptr<Catalogue> parent_catalogue) {
     parent_catalogue->insertCatalogue(std::make_unique<Catalogue>(Catalogue(name)));
-}
-
-void AdminInterface::createRootCatalogue() {
-    rootCatalogue = new Catalogue("/");
 }
 
 void AdminInterface::moveFile(std::shared_ptr<Catalogue> old_catalogue, std::shared_ptr<Catalogue> new_catalogue, std::shared_ptr<File> file) {

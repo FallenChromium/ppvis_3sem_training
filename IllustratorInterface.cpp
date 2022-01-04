@@ -4,7 +4,7 @@ using namespace cms;
 
 std::shared_ptr<Illustration> IllustratorInterface::createIllustration(std::string name) {
     std::shared_ptr<Illustration> illustration = std::shared_ptr<Illustration>(new Illustration(name, _name));
-    _storage->createDraft(illustration);
+    _storage->getDrafts()->insertFile(illustration);
     return illustration;
 }
 

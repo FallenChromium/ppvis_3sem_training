@@ -73,7 +73,6 @@ class Storage {
     std::shared_ptr<Catalogue> getDrafts();
     Storage();
     Storage(std::string root_name, std::string drafts_name);
-    friend class IllustratorInterface;
 };
 
 class CMSInterface {

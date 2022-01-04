@@ -3,7 +3,7 @@
 using namespace cms;
 
 void WriterInterface::createDocument(std::string title, std::string text) {
-    _storage->getDrafts()->insertFile(std::make_shared<Document>(title, text));
+    _storage->getDrafts()->insertFile(std::shared_ptr<Document>(new Document(title, _name, text)));
 }
 
 void WriterInterface::updateDocumentName(std::shared_ptr<Document> doc, std::string new_name) {

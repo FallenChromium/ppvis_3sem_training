@@ -2,8 +2,10 @@
 
 using namespace cms;
 
-void IllustratorInterface::createIllustration(std::string name) {
-    _storage->createDraft(std::shared_ptr<Illustration>(new Illustration(name, _name)));
+std::shared_ptr<Illustration> IllustratorInterface::createIllustration(std::string name) {
+    std::shared_ptr<Illustration> illustration = std::shared_ptr<Illustration>(new Illustration(name, _name));
+    _storage->createDraft(illustration);
+    return illustration;
 }
 
 void IllustratorInterface::insertIllustration(Catalogue* folder, std::shared_ptr<Illustration> file) {

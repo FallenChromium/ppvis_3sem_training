@@ -105,7 +105,7 @@ class WriterInterface: public CMSInterface {
     //helper functions, recursive
     void updateNameChecker(std::string new_name, std::shared_ptr<Catalogue> catalogue);
     public:
-    void createDocument(std::string name, std::string text);
+    std::shared_ptr<Document> createDocument(std::string name, std::string text);
     void updateDocumentName(std::shared_ptr<Document> doc, std::string new_name);
     void updateDocumentText(std::shared_ptr<Document> doc, std::string text);
     void linkIllustration(std::shared_ptr<Document> doc, std::shared_ptr<Illustration> illustration);
@@ -119,7 +119,7 @@ class IllustratorInterface: public CMSInterface {
     //helper function, needed for recursion
     void deleteIllustration(std::shared_ptr<Illustration>, std::shared_ptr<Catalogue>);
     public:
-    void createIllustration(std::string name);
+    std::shared_ptr<Illustration> createIllustration(std::string name);
     //Functions that don't impact object's lifetime should take a plain reference
     //Source: https://www.youtube.com/watch?v=xnqTKD8uD64
     void insertIllustration(Catalogue *folder, std::shared_ptr<Illustration>);

@@ -2,8 +2,10 @@
 
 using namespace cms;
 
-void WriterInterface::createDocument(std::string title, std::string text) {
-    _storage->getDrafts()->insertFile(std::shared_ptr<Document>(new Document(title, _name, text)));
+std::shared_ptr<Document> WriterInterface::createDocument(std::string title, std::string text) {
+    std::shared_ptr<Document> document(new Document(title, _name, text));
+    _storage->getDrafts()->insertFile(document);
+    return document;
 }
 
 void WriterInterface::updateDocumentName(std::shared_ptr<Document> doc, std::string new_name) {

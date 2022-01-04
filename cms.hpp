@@ -14,6 +14,7 @@ class File {
     std::string getCreatedDate();
     void setName(std::string);
     File(std::string filename, std::string author);
+    virtual ~File() {};
     friend class SecretaryInterface;
 };
 
@@ -32,7 +33,7 @@ class Document : public File {
     std::set<std::shared_ptr<Illustration>> getAttachments();
     void addAttachment(std::shared_ptr<Illustration>);
     void removeAttachment(std::shared_ptr<Illustration>);
-    Document(std::string filename, std::string author, std::string text, std::string name);
+    Document(std::string filename, std::string author, std::string text);
     friend class WriterInterface;
 };
 
@@ -76,6 +77,8 @@ class CMSInterface {
     std::string _name;
     std::shared_ptr<Storage> _storage;
     CMSInterface(std::string name, std::shared_ptr<Storage> storage);
+    virtual ~CMSInterface() {};
+
 };
 
 //single responsibility principle tip: it's best to create interfaces to not tightly interconnect the entities and their implementations. That way, we can also define how each actor interacts (huh, get it?) with the classes.

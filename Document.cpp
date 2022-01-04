@@ -2,7 +2,7 @@
 
 using namespace cms;
 
-Document::Document(std::string filename, std::string author, std::string text, std::string name) : File::File( filename, author) {
+Document::Document(std::string filename, std::string author, std::string text) : File::File( filename, author) {
     _text = text;
 }
 

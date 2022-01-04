@@ -16,12 +16,13 @@ class File {
     File(std::string filename, std::string author);
 };
 
-class Illustration : protected File {
+class Illustration : public File {
     protected:
     Illustration(std::string filename, std::string author) : File(filename, author) {};
+    friend class IllustratorInterface;
 };
 
-class Document : protected File {
+class Document : public File {
     protected:
     std::string _text;
     std::set<std::shared_ptr<Illustration>> _attachments;
@@ -48,22 +49,44 @@ class Catalogue {
     std::set<std::shared_ptr<Catalogue>> getCatalogues() const;
     Catalogue(std::string name);
     friend class AdminInterface;
+    friend class IllustratorInterface;
     friend class Storage;
 };
 
+class Storage {
+    private:
+    std::shared_ptr<Catalogue> _rootCatalogue;
+    std::shared_ptr<Catalogue> _draftsCatalogue;
+    //adds a newly constructed file to the drafts folder
+    void createDraft(std::shared_ptr<File>);
+    public:
+    std::shared_ptr<Catalogue> getRoot();
+    std::shared_ptr<Catalogue> getDrafts();
+    Storage();
+    Storage(std::string root_name, std::string drafts_name);
+    friend class IllustratorInterface;
+};
 
+class CMSInterface {
+    protected:
+    std::string _name;
+    std::shared_ptr<Storage> _storage;
+    CMSInterface(std::string name, std::shared_ptr<Storage> storage);
+};
 
 //single responsibility principle tip: it's best to create interfaces to not tightly interconnect the entities and their implementations. That way, we can also define how each actor interacts (huh, get it?) with the classes.
 //Source 1: https://stackoverflow.com/questions/3441853/single-responsibility-in-c-should-i-implement-it-using-friend-classes-or-mor
 //Source 2: https://hackernoon.com/single-responsibility-principle-in-c-solid-as-a-rock-4d323ygo
-class SecretaryInterface {
+class SecretaryInterface: public CMSInterface {
     public:
     void insertFile();
     void searchDocumentByAuthor(std::string author);
     void searchDocumentByName(std::string name);
+    SecretaryInterface(std::string name, std::shared_ptr<Storage> storage) : CMSInterface(name, storage) {};
+
 };
 
-class WriterInterface {
+class WriterInterface: public CMSInterface {
     public:
     void createDocument(std::string name, std::string text);
     void updateDocumentName(Document doc, std::string new_name);
@@ -71,34 +94,31 @@ class WriterInterface {
     void linkIllustration(Document doc, Illustration illustration);
     //may "fail" (no changes made) silently if the Illustration is not linked to the document already.
     void unlinkIllustration(Document doc, std::shared_ptr<Illustration>);
+    WriterInterface(std::string name, std::shared_ptr<Storage> storage) : CMSInterface(name, storage) {};
 };
 
-class IllustratorInterface {
+class IllustratorInterface: public CMSInterface {
     public:
     void createIllustration(std::string name);
-    void insertIllustration(Catalogue folder, std::shared_ptr<Illustration>);
+    //Functions that don't impact object's lifetime should take a plain reference
+    //Source: https://www.youtube.com/watch?v=xnqTKD8uD64
+    void insertIllustration(Catalogue *folder, std::shared_ptr<Illustration>);
     //will throw exception if the illustration is linked to any document
     void deleteIllustration(std::shared_ptr<Illustration>);
+    IllustratorInterface(std::string name, std::shared_ptr<Storage> storage) : CMSInterface(name, storage) {};
+
 };
 
-class AdminInterface {
-    public:
-    //delete file from ALL catalogues. Second argument is needed for the recursion.
+class AdminInterface: public CMSInterface {
+    protected:
     void deleteFile(std::shared_ptr<File>,std::shared_ptr<Catalogue>);
+    public:
+    void deleteFile(std::shared_ptr<File>);
     void createCatalogue(std::string name, std::shared_ptr<Catalogue> parent_catalogue);
     //will throw exception if there is no such file in the old_catalogue
     void moveFile(std::shared_ptr<Catalogue> old_catalogue, std::shared_ptr<Catalogue> new_catalogue, std::shared_ptr<File> file);
-};
+    AdminInterface(std::string name, std::shared_ptr<Storage> storage) : CMSInterface(name, storage) {};
 
-class Storage {
-    private:
-    std::unique_ptr<Catalogue> _rootCatalogue;
-    std::unique_ptr<Catalogue> _draftsCatalogue;
-    public:
-    Catalogue* getRoot();
-    Catalogue* getDrafts();
-    Storage();
-    Storage(std::string root_name, std::string drafts_name);
 };
 
 }

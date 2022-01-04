@@ -7,6 +7,7 @@ Catalogue::Catalogue(std::string name) {
 }
 
 void Catalogue::insertFile(std::shared_ptr<File> file) {
+    //TODO: add name checking
     _files.insert(file);
 }
 
@@ -15,6 +16,7 @@ void Catalogue::removeFile(std::shared_ptr<File> file) {
 }
 
 void Catalogue::insertCatalogue(std::shared_ptr<Catalogue> catalogue) {
+    //TODO: add name checking
     _catalogues.insert(catalogue);
 }
 

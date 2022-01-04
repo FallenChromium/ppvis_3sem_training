@@ -6,5 +6,3 @@
 #include <string>
 
 using namespace cms;
-
-Storage storage = Storage();

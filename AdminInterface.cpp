@@ -21,3 +21,7 @@ void AdminInterface::deleteFile(std::shared_ptr<File> file, std::shared_ptr<Cata
         deleteFile(file, subcatalogue);
     }
 }
+
+void AdminInterface::deleteFile(std::shared_ptr<File> file) {
+    deleteFile(file, _storage->getRoot());
+}

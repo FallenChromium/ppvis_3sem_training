@@ -17,7 +17,7 @@ void IllustratorInterface::IllustrationDependencyCheck(std::shared_ptr<Illustrat
     for(auto file: catalogue->getFiles()) {
         std::shared_ptr<Document> doc = std::dynamic_pointer_cast<Document>(file);
         if (doc != nullptr) {
-            std::set<std::shared_ptr<Illustration>> attachments = doc->getAttachments();
+            std::set<std::shared_ptr<Illustration> > attachments = doc->getAttachments();
             if (attachments.find(illustration) != attachments.end()) throw IllustrationisDependedUpon();
         }
     }

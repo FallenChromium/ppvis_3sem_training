@@ -14,7 +14,7 @@ void Document::setText(std::string text) {
     _text = text;
 }
 
-std::set<std::shared_ptr<Illustration>> Document::getAttachments() {
+std::set<std::shared_ptr<Illustration> > Document::getAttachments() {
     return _attachments;
 }
 

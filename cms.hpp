@@ -29,10 +29,10 @@ class Illustration : public File {
 class Document : public File {
     protected:
     std::string _text;
-    std::set<std::shared_ptr<Illustration>> _attachments;
+    std::set<std::shared_ptr<Illustration> > _attachments;
     std::string getText();
     void setText(std::string);
-    std::set<std::shared_ptr<Illustration>> getAttachments();
+    std::set<std::shared_ptr<Illustration> > getAttachments();
     void addAttachment(std::shared_ptr<Illustration>);
     void removeAttachment(std::shared_ptr<Illustration>);
     Document(std::string filename, std::string author, std::string text);
@@ -44,15 +44,15 @@ class Document : public File {
 class Catalogue {
     protected:
     std::string _name;
-    std::set<std::shared_ptr<File>> _files;
-    std::set<std::shared_ptr<Catalogue>> _catalogues;
+    std::set<std::shared_ptr<File> > _files;
+    std::set<std::shared_ptr<Catalogue> > _catalogues;
     //it's appropriate to use void if operation can't fail silently (exception is thrown).
     void insertFile(std::shared_ptr<File>);
     void insertCatalogue(std::shared_ptr<Catalogue>);
     void removeFile(std::shared_ptr<File>);
     void removeCatalogue(std::shared_ptr<Catalogue>);
-    std::set<std::shared_ptr<File>> getFiles() const;
-    std::set<std::shared_ptr<Catalogue>> getCatalogues() const;
+    std::set<std::shared_ptr<File> > getFiles() const;
+    std::set<std::shared_ptr<Catalogue> > getCatalogues() const;
     std::string getName();
     Catalogue(std::string name);
     friend class AdminInterface;
@@ -90,12 +90,12 @@ class CMSInterface {
 class SecretaryInterface: public CMSInterface {
     protected:
     //helper functions, recursive
-    void NameSearchTraversal(std::shared_ptr<std::set<std::shared_ptr<Document>>> results, std::string term, std::shared_ptr<Catalogue> catalogue);
-    void AuthorSearchTraversal(std::shared_ptr<std::set<std::shared_ptr<Document>>>, std::string term, std::shared_ptr<Catalogue> catalogue);
+    void NameSearchTraversal(std::shared_ptr<std::set<std::shared_ptr<Document> > > results, std::string term, std::shared_ptr<Catalogue> catalogue);
+    void AuthorSearchTraversal(std::shared_ptr<std::set<std::shared_ptr<Document> > >, std::string term, std::shared_ptr<Catalogue> catalogue);
     public:
     void insertFile(std::shared_ptr<File> file, std::shared_ptr<Catalogue> catalogue);
-    std::shared_ptr<std::set<std::shared_ptr<Document>>> searchDocumentByAuthor(std::string author);
-    std::shared_ptr<std::set<std::shared_ptr<Document>>> searchDocumentByName(std::string name);
+    std::shared_ptr<std::set<std::shared_ptr<Document> > > searchDocumentByAuthor(std::string author);
+    std::shared_ptr<std::set<std::shared_ptr<Document> > > searchDocumentByName(std::string name);
     SecretaryInterface(std::string name, std::shared_ptr<Storage> storage) : CMSInterface(name, storage) {};
 
 };

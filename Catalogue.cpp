@@ -32,10 +32,10 @@ void Catalogue::removeCatalogue(std::shared_ptr<Catalogue> catalogue) {
     _catalogues.erase(catalogue);
 }
 
-std::set<std::shared_ptr<File>>  Catalogue::getFiles() const {
+std::set<std::shared_ptr<File> >  Catalogue::getFiles() const {
     return _files;
 }
 
-std::set<std::shared_ptr<Catalogue>>  Catalogue::getCatalogues() const {
+std::set<std::shared_ptr<Catalogue> >  Catalogue::getCatalogues() const {
     return _catalogues;
 }
